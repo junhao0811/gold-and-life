@@ -58,12 +58,6 @@ class Land:
 
     def get_guardians(self) -> int:
         return self.guardians
-    
-    def get_ratio(self) -> float:
-        try:
-            return self.guardians / self.gold
-        except ZeroDivisionError:
-            return float("inf")
 
     def set_gold(self, new_gold: float) -> None:
         self.gold = new_gold
