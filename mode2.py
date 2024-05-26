@@ -4,38 +4,49 @@ from data_structures.referential_array import ArrayR
 
 class Mode2Navigator:
     """
-    - Required to include short paragraphs (50-300 words) detailing your approach in detail
-    - Approach details in general should include:
-        - Data structures and data types used
-        - Small example(s)
-        - Explanations/Reasonings/Proofs on your complexity result (i.e., details on why you obtained the specific best case and worst case results)
-
-    Approach:
-    - The navigator uses a MaxHeap data structure to store the land sites where the key is the score of the land site.
-    - The MaxHeap is used to maintain the land sites in sorted order based on the score of the land site.
-    - The simulate_day method simulates a day of the game by selecting the land sites that will maximise the scores of the adventure teams.
-    - The compute_score method computes the maximum/potential score of a land site based on the number of adventurers the team currently has.
+    The navigator uses a MaxHeap data structure to store the land sites where the key is the score of the land site.
+    The MaxHeap is used to maintain the land sites in heap order based on the score of the land site.
+    The simulate_day method simulates a day of the game by selecting the land sites that will maximise the scores of the adventure teams.
+    The compute_score method computes the maximum/potential score of a land site based on the number of adventurers the team currently has.
     
-    Data structures and data types used:
-    - MaxHeap: Used to store the land sites where the key is the score of the land site.
-    - Land: Represents the land site object.
-    - list: Used to store the choices of adventurer numbers made by the adventure teams.
+    Other data structures and data types used include:
+        Land - which represents the land site object.
+        list - which is used to store the choices of adventurer numbers made by the adventure teams.
     
     Example:
-    - sites = [Land("Dawn Island", 100, 50), Land("Shimotsuki Village", 200, 100), Land("Gecko Islands", 300, 150)]
-    - n_teams = 3
-    - navigator = Mode2Navigator(n_teams)
-    - navigator.add_sites(sites)
-    - choices = navigator.simulate_day(100)
-    - Output: [(Land("Gecko Islands", 300, 50), 50), (Land("Shimotsuki Village", 200, 50), 50), (None, 0)]
+        Given the array of following scores of the land sites:
+        [400, 350, 375, 300, 325, 275, 250]
+        
+        The MaxHeap will be constructed as follows:
+                            400
+                           /   \
+                         375    350
+                        /   \   /  \
+                      325  300 275 250
+                    
+        The time complexity will be O(N) for bottom-up heap construction, where N is the number of land sites.
+
+        By using get_max() method, it will return the maximum element from the heap which is 400, and so on.
+        The time complexity of get_max() method will be O(log(N)) where N is the number of land sites.
+        If we were to get_max() K number of times, the time complexity will be O(K log(N)).
 
     Complexity:
-    - simulate_day method:
-        - Best case:
-        - Worst case: O(N + K log(N)) where N is the number of existing land sites and K is the number of adventure teams participating in the game
-    - compute_score method:
-        - Best case:
-        - Worst case: O(1) where the maximum/potential score of a land site is computed
+        __init__:
+            O(1) for best/worst case when initialising the object.
+
+        add_sites:
+            O(S) for best/worst case when looping through the list of land sites where 
+            S is the length of the additional land sites (input sites) to be added.
+
+        simulate_day:
+            O(N + K log(N)) for best/worst case when constructing the MaxHeap,
+            getting the maximum score of the land site out of the MaxHeap and
+            adding back the updated score back to the MaxHeap K times
+            where N is the number of existing land sites and K is the number of adventure teams participating in the game.
+
+        compute_score:
+            O(1) for best/worst case when computing the maximum/potential score of a land site which it
+            involves arithmetic operations that take constant time operations.
     """
 
     def __init__(self, n_teams: int) -> None:
@@ -81,11 +92,12 @@ class Mode2Navigator:
                                            and how many adventurers onto the land site
                                            (or 0 if the team leader decides not to send any adventurers).
         
-        Complexity:
-            Best case:
-            Worst case: O(N + K log(N)) where
-                N is the number of existing land sites.
-                K is the number of adventure teams participating in the game.
+        Complexity: O(N + K log(N)) for best/worst case when constructing the MaxHeap,
+                    getting the maximum score of the land site out of the MaxHeap and
+                    adding back the updated score back to the MaxHeap K times
+
+            Where N is the number of existing land sites.
+            Where K is the number of adventure teams participating in the game.
         """
         # Create a list to store the tuples of choices in order
         choices = []
@@ -125,7 +137,6 @@ class Mode2Navigator:
     def compute_score(self, land: Land, adventurer_size: int) -> tuple[float, int, float]:
         """
         The method computes the maximum/potential score of a land site, based on the number of adventurers the team currently has.
-        Keep in mind multiple land sites could have the same maximum/potential score. 
 
         Args:
             land (Land): The land site object.
@@ -136,7 +147,8 @@ class Mode2Navigator:
                                       the remaining adventure numbers, 
                                       and the gold (reward) gained for the particular score.
 
-        Complexity: O(1) for best/worst case when computing the maximum/potential score of a land site.
+        Complexity: O(1) for best/worst case when computing the maximum/potential score of a land site which it
+                    involves arithmetic operations that take constant time operations.
         """
         gold = land.get_gold()
         guardians = land.get_guardians()
