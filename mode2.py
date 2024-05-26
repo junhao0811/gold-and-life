@@ -113,7 +113,7 @@ class Mode2Navigator:
         # Each adventurer team takes turn selecting one land site to adventure
         for i in range(self.n_teams): # O(K)
             land: Land = sites_by_highest_score.get_max()[2] # O(log(N))
-            _, adventurers_remaining, received = self.compute_score(land, adventurer_size)
+            score, adventurers_remaining, received = self.compute_score(land, adventurer_size)
             sent_adventurers = adventurer_size - adventurers_remaining
 
             if sent_adventurers == 0:
@@ -130,7 +130,8 @@ class Mode2Navigator:
             # Update the score of the land site
             new_score = self.compute_score(land, adventurer_size)[0]
             sites_by_highest_score.add((new_score, land.get_name(), land)) # O(log(N))
-
+            print(score)
+            
         # Return the list of tuples
         return choices
 
@@ -163,3 +164,26 @@ class Mode2Navigator:
         score = 2.5 * adventurers_remaining + received
 
         return score, adventurers_remaining, received
+    
+if __name__ == "__main__":
+    a = Land("A", 400, 100)
+    b = Land("B", 300, 150)
+    c = Land("C", 100, 5)
+    d = Land("D", 350, 90)
+    e = Land("E", 300, 100)
+    sites = [a, b, c, d, e]
+
+    # Used later
+    cur_guardians = {
+        site.get_name(): site.get_guardians()
+        for site in sites
+    }
+    cur_gold = {
+        site.get_name(): site.get_gold()
+        for site in sites
+    }
+
+    nav = Mode2Navigator(8)
+    nav.add_sites(sites)
+    results = nav.simulate_day(100)
+    print(results)
